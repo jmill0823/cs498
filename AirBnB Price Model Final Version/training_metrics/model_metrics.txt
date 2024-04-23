@@ -1,0 +1,6 @@
+Test set - MAE: 32.78825718758406
+Test set - RMSE: 48.45952590039706
+Test set - R2 Score: 0.6138027147293146
+Validation set - MAE: 33.500303929552125
+Validation set - RMSE: 50.18023828600663
+Validation set - R2 Score: 0.6005778523769802
