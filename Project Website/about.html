@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/*CSS for styling the site */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h2, p {
+    text-align: center;
+    
+}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #7ddce8;
+  color: white;
+}
+input {
+  align-items: center;
+  display: block;
+  margin: 0 auto;
+}
+button {
+  align-items: center;
+  display: block;
+  margin: 0 auto;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  background-color: #333;
+}
+
+.pass {
+   align-items: center;
+  margin: 0 auto;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #333;
+  background-color: #7ddce8;
+  width: 30%;
+  border: 2px solid black;
+  font-weight: bold;
+  margin-top: 20px;
+}
+</style>
+<script>
+/*JS that takes the password input and checks it*/
+  function checkPassword() {
+      var password = document.getElementById("password").value;
+      if(password === "password") {
+        /*if its correct it displays the protected text */
+          document.getElementById("protected-text").style.display = "block";
+      } else {
+          alert("Incorrect password!");
+      }
+  }
+  </script>
+</head>
+<body>
+
+<!-- nav bar -->
+<div class="topnav">
+  <a href="CS498-Proj.html">Home</a>
+  <a href="weather.html">Weather</a>
+  <a href="housing.html">Housing</a>
+  <a class="active" href="about.html">About us</a>
+</div>
+
+<!-- Links to data -->
+<div style="padding-left:16px">
+  <h2>About us</h2>
+  <p>If you want to view the datasets used for the project you can click the links below to view them. 
+  </p>
+  <p> <a href="https://www.kaggle.com/datasets/rudymizrahi/airbnb-listings-in-major-us-cities-deloitte-ml">AirBnb Dataset Site</a> </p>
+  <p> <a href="3638486.csv" download>Download Weather Dataset 1</a> </p>
+  <p> <a href="3638497.csv" download>Download Weather Dataset 2</a> </p>
+  <p> If you want to see a more in depth
+    description of how our models work, just input the password below to view them.
+  </p>
+
+  <!-- Input field for the password -->
+  <input type="password" id="password">
+  <button clas = "button" onclick="checkPassword()">Submit</button>
+
+  <!-- Hidden text -->
+  <div id="protected-text" style="display: none;">
+    <h2>Super Secret Descriptions of the Machine Learning Involved </h2>
+    <p class = "pass">The data used for the Airbnb Price Prediction Software is divided into two Excel files: a training file and a testing file. 
+      Both files contain real-world data across multiple columns that detail various aspects of an Airbnb listing. 
+      Notably, the testing file does not include the target column, 'log_price'. These columns cover a range of information including identification 
+      pricing data (ID and 'log_price', the latter of which is converted back to regular price for final predictions), specifics of the property such
+      as property type and room type, geographical coordinates (latitude and longitude), and physical attributes like the number of bedrooms and bathrooms.
+      They also include booking and host information, such as whether the host has a profile picture ('host_has_profile_pic'), whether their identity is verified ('host_identity_verified'), 
+      and their response rates. Other attributes like amenities, descriptions, neighborhood details, and thumbnail URLs are also part of the data. Due to the complexity and varied relevance of these features, 
+      only selected ones—such as 'log_price' (excluded during testing), property type, room type, number of people the property accommodates, 
+      number of bathrooms, bed type, cancellation policy, city, host information, latitude, longitude, number of reviews, bedrooms, 
+      and number of beds are used for training. Techniques such as one-hot encoding and strategies to manage missing values are employed to facilitate effective training and comparison of these attributes. 
+      Our model had a final R^2 value of 0.614 and can effectively predict prices within $30 of the original price. The predicted prices from the test set can be viewed as a csv file,
+      along with several images from data analysis and the training/testing process. Our model consisted of a stacked regressor design, consisting of LightGBM and Ridge Regression to predict the prices.</p>
+
+      <p class = "pass">In order to plan our vacations far into the future, we have also created a weather predictor, so that you can know exactly how to prepare for your trip.
+       Although our site is mainly used to predict weather for vacation spots, it can be used anywhere in the US for any purpose: daily life, event planning, etc. 
+       It is important to remember that this is just a predictor, that is based on historical data. Unlike weather channels we do not have satellites providing us live weather data,
+        so if you are using this far into the future or are trying to predict far into the future, our model may not be accurate.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

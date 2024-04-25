@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/*CSS for styling the sit */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h2, p {
+    text-align: center;
+    
+}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #7ddce8;
+  color: white;
+}
+
+select {
+  position: relative;
+  display: inline-block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  background-color: #333;
+  
+}
+
+label {
+  position: relative;
+  display: inline-block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  background-color: #333;
+}
+
+form {
+  align-items: center;
+  text-align: center;
+}
+
+.message {
+  align-items: center;
+  display: none;
+  margin: 0 auto;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #333;
+  background-color: #7ddce8;
+  width: 30%;
+  border: 2px solid black;
+  font-weight: bold;
+  margin-top: 20px;
+}
+/*Makes the result section visible*/
+.message.visible {
+  display: block;
+}
+
+input {
+  align-items: center;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #333;
+  
+  
+}
+
+.sub{
+  background-color: #7ddce8;
+}
+</style>
+<script>
+function checkOptions() {
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+  event.preventDefault(); 
+  /*Gets the user's inputs*/
+  var option1 = document.getElementById("Year").value
+  var option2 = document.getElementById("Month").value
+  var option3 = document.getElementById("Day").value
+  var option4 = document.getElementById("city").value
+  
+  /*Calls the search function*/
+  searchCSV(option1, option2, option3, option4); 
+});
+}
+
+function searchCSV(option1, option2, option3, option4) {
+  /*fetches the csv*/
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    /*if the fetch was succesful performs search */
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        /*splits the data into rows */
+        var rows = xhr.responseText.split("\n");
+        var day = option3;
+
+        /*array to store data to be displayed*/
+        var matchingRows = [];
+        option3 = parseFloat(option3);
+        option1 = parseFloat(option1);
+
+        /*series of if's that convert the input month and day into day of the year */
+        if(option2 == 12){
+          option3 = option3+334;
+        }
+        else if(option2 == 11){
+          option3 = option3+304; 
+        }
+        else if(option2 == 10){
+          option3 = option3+273;
+        }
+        else if(option2 == 9){
+          option3 = option3+243;
+        }
+        else if(option2 == 8){
+          option3 = option3+212;
+        }
+        else if(option2 == 7){
+          option3 = option3+181;
+        }
+        else if(option2 == 6){
+          option3 = option3+151;
+        }
+        else if(option2 == 5){
+          option3 = option3+120;
+        }
+        else if(option2 == 4){
+          option3 = option3+90;
+        }
+        else if(option2 == 3){
+          option3 = option3+59;
+        }
+        else if(option2 == 2){
+          option3 = option3+31;
+        }
+        
+        /*loops through each row of data*/
+        for (var i = 1; i < rows.length; i++) {
+          /*split the data into each feature*/
+          var columns = rows[i].split(",");
+          var check = 0;
+          var year = option1;
+          var place = ' ';
+          /*set place to the city the user input */
+          if(option4 == 'sf'){
+            place = 'San Francisco';
+          }
+          else if(option4 == 'bo'){
+            place = 'Boston';
+          }
+          else if(option4 == 'ch'){
+            place = 'Chicago';
+          }
+          else if(option4 == 'ny'){
+            place = 'New York';
+          }
+          else if(option4 == 'la'){
+            place = 'Los Angeles';
+          }
+          else {
+            place = 'DC';
+          }
+          /*For some reason the csv stores December 31 as January 0, so change if neccesary*/ 
+          if(option3 == 365){
+            option3 = 0;
+            option1 = option1+1; 
+          }
+          /*If the year matches add to the flag*/
+          if(option1 == columns[0]){
+            check++;
+          }
+          /*If the day matches add to the flag*/
+          if(option3 == columns[1]){
+            check++;
+          }
+
+          if(option4 == columns[6]){
+            check++;
+          }
+          /*If all features match add to the list*/
+          if(check == 3){
+            matchingRows.push(rows[i]); 
+          }
+          /*Set the year back if it was changed due to the 31 of December */
+          if(option3 == 0){
+            year = option1-1; 
+          }
+        }
+        
+        /*display the expected weather for the date input*/
+        var message = document.getElementById("resultMessage");
+        message.classList.add("visible");
+        if (matchingRows.length > 0){
+          var text = [];
+          for(var i = 0; i < matchingRows.length; i++){
+          var columnsText = matchingRows[i].split(",")
+            text.push('Expected average temperature for ' + option2 + '/' + day + '/' + year + ' in ' + place + ': ' + columnsText[5] + ' F with an average wind speed of ' + columnsText[2])
+          }
+          document.getElementById("resultMessage").innerHTML = text.join("<br>");
+          
+        } 
+        /* If no date found say so */
+        else {
+          document.getElementById("resultMessage").innerText = "No matching date found.";
+        }
+      } else {
+        /*Display if there was an error fetching the csv */
+        document.getElementById("resultMessage").innerText = "Error fetching CSV file.";
+      }
+    }
+  };
+  /* getting the csv */
+  xhr.open("GET", "weather_prediction.csv", true); // Replace "example.csv" with your CSV file path
+  xhr.send();
+}
+
+  </script>
+</head>
+<body>
+<!-- Nav bar -->
+<div class="topnav">
+  <a href="CS498-Proj.html">Home</a>
+  <a class="active" href="weather.html">Weather</a>
+  <a href="housing.html">Housing</a>
+  <a href="about.html">About us</a>
+</div>
+
+<div style="padding-left:16px">
+  <h2>Weather Prediction</h2>
+  <p>This section of the project is meant to predict the average temperature.
+  </p>
+
+    <!-- form containing all the user input fields and the submit button -->
+    <form class = "dropdown" id="searchForm">
+    <label for="textInput">Enter Month (as a number):</label>
+    <input type="number" id="Month" name="textInput">
+    <label for="textInput">Enter Day (as a number):</label>
+    <input type="number" id="Day" name="textInput">
+    <label for="textInput">Enter Year (min 2025):</label>
+    <input type="number" id="Year" name="textInput">
+   <select id="city">
+      <option value="null">City</option>
+      <option value="ch">Chicago</option>
+      <option value="dc">DC</option>
+      <option value="la">LA</option>
+      <option value="ny">New York</option>
+      <option value="sf">San Fran</option>
+      <option value="bo">Boston</option>
+      
+    </select>
+
+    <input class = "sub" onclick = "checkOptions()" type="submit" value="Submit">
+    <div class = "message" id="resultMessage">result message</div>
+    </form>
+
+    
+  <!-- Graphs -->
+  <p> Here are some relevant graphs that show how our algorithm decided on prices</p>
+  <h2>
+  <div><img src="avtemp.png"></div>
+  <p> This graph shows the predicted average temperature for a day based on the Max and Min temperature for that day</p>
+  <div><img src="windspeed.png"></div>
+  <p> This graph shows the predicted average wind speed for a day based on the Max and Min wind speed </p>
+ 
+</section>
+</div>
+
+</body>
+</html>

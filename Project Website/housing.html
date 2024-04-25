@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h2, p {
+    text-align: center;
+    
+}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #7ddce8;
+  color: white;
+}
+
+select {
+  position: relative;
+  display: inline-block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  background-color: #333;
+}
+option {
+  
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  color: #333;
+}
+
+.message{
+  text-align: center;
+}
+
+form {
+  align-items: center;
+  text-align: center;
+}
+
+img {
+  width: 50%
+}
+
+input {
+  align-items: center;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #333;
+  background-color: #7ddce8;
+  
+}
+
+.message {
+  align-items: center;
+  display: none;
+  margin: 0 auto;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #333;
+  background-color: #7ddce8;
+  width: 30%;
+  border: 2px solid black;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.message.visible {
+  display: block;
+}
+</style>
+<script>
+function checkOptions() {
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+  event.preventDefault(); 
+  /*Gets the user's inputs*/
+  var option1 = document.getElementById("numbeds").value;
+  var option2 = document.getElementById("numrooms").value;
+  var option3 = document.getElementById("numbath").value;
+  var option4 = document.getElementById("city").value;
+  var option5 = document.getElementById("insta").value;
+  var option6 = document.getElementById("host").value;
+ 
+  
+  /*Calls the search function*/
+  searchCSV(option1, option2, option3, option4, option5, option6); 
+});
+}
+
+function searchCSV(option1, option2, option3, option4, option5, option6) {
+  /*fetches the csv*/
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    /*if the fetch was succesful performs search */
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        /*splits the data into rows */
+        var rows = xhr.responseText.split("\n");
+        
+        /*array to store data to be displayed*/
+        var matchingRows = [];
+        var total = 6;
+          /*Checks how many fields were filled */
+          if ((option1 == "null")) {
+            total--;
+          }
+          if ((option2 == "null")) {
+            total--;
+          }
+          if ((option3 == "null")) {
+            total--;
+          }
+          if ((option4 == "null")) {
+            total--;
+          }
+          if ((option5 == "null")) {
+            total--; 
+          }
+          if ((option6 == "null")) {
+            total--;
+            
+          }
+        /*loops through each row of data*/
+        for (var i = 0; i < rows.length; i++) {
+          var columns = rows[i].split(",");
+          var check = 0;
+
+          /*Counts how many features match the input*/
+          if ((columns[1] === option3)) {
+            check++;
+          }
+          if ((columns[2] === option4)) {
+            check++;
+          }
+          if ((columns[3] === option6)) {
+            check++;
+          }
+          if ((columns[4] === option5)) {
+            check++;
+          }
+          if ((columns[6] === option2)) {
+            check++; 
+          }
+          if ((columns[7] === option1)) {
+            check++;
+          }
+          /*If the number of mathcing features = the number of inputs add to the list */
+          if(check == total){
+            matchingRows.push(rows[i]); 
+          }
+        }
+
+        /*display all the houses that match the input*/
+        var message = document.getElementById("resultMessage");
+        message.classList.add("visible");
+        if ((matchingRows.length > 0) && (total > 0)) {
+          var text = [];
+          for(var i = 0; i < matchingRows.length; i++){
+          var columnsText = matchingRows[i].split(",")
+            text.push(columnsText[0] + ' in ' + columnsText[2] + ' for $' + columnsText[8])
+          }
+          document.getElementById("resultMessage").innerHTML = text.join("<br>");
+          
+          /* If no houses fit input say so */
+        } else if (total == 0) {
+          document.getElementById("resultMessage").innerText = "Please pick something";
+        }
+        /* If no houses fit input say so */
+        else {
+          document.getElementById("resultMessage").innerText = "No matching row found.";
+        }
+      } else {
+        /*Say if there was an error reading csv */
+        document.getElementById("resultMessage").innerText = "Error fetching CSV file.";
+      }
+    }
+  };
+  xhr.open("GET", "testprice.csv", true); // Replace "example.csv" with your CSV file path
+  xhr.send();
+}
+
+  </script>
+</head>
+<body>
+
+<!-- nav bar -->
+<div class="topnav">
+  <a href="CS498-Proj.html">Home</a>
+  <a href="weather.html">Weather</a>
+  <a class="active" href="housing.html">Housing</a>
+  <a href="about.html">About us</a>
+</div>
+
+<div style="padding-left:16px">
+  <h2>Housing Price Prediction</h2>
+  <p>Use the filters below to see what kinds of AirBNB's our model reckons you can find!
+  </p>
+
+<!-- Form containing input user input fields and the submit button -->
+  <form class = "dropdown" id="searchForm">
+    <select id="numbeds">
+      <option value="null">Number of Beds</option>
+      <option value= 1>1</option>
+      <option value=2>2</option>
+      <option value=3>3</option>
+      <option value=4>4</option>
+      <option value=5>5</option>
+      <option value=6>6</option>
+      
+    </select>
+    <select id="numrooms">
+      <option value="null">Number of Rooms</option>
+      <option value=0>0</option>
+      <option value=1>1</option>
+      <option value=2>2</option>
+      <option value=3>3</option>
+     
+    </select>
+    <select id="numbath">
+      <option value="null">Number of Bathrooms</option>
+      <option value=1>1</option>
+      <option value=1.5>1.5</option>
+      <option value=2>2</option>
+      <option value=2.5>2.5</option>
+      
+    </select>
+    <select id="city">
+      <option value="null">City</option>
+      <option value="Chicago">Chicago</option>
+      <option value="DC">DC</option>
+      <option value="LA">LA</option>
+      <option value="NYC">New York</option>
+      <option value="SF">San Fran</option>
+      <option value="Boston">Boston</option>
+      
+    </select>
+    <select id="insta">
+      <option value="null">Instant Booking</option>
+      <option value="t">Yes</option>
+      <option value="f">No</option>
+     
+    </select>
+    <select id="host">
+      <option value="null">Host Identity Verified</option>
+      <option value="t">Yes</option>
+      <option value="f">No</option>
+     
+    </select>
+    <br><br>
+    
+    <input onclick = "checkOptions()" type="submit" value="Submit">
+    <div class = "message" id="resultMessage"></div>
+  </form>
+
+  <!-- Graphs -->
+  <p> Here are some relevant graphs that show how our algorithm decided on prices</p>
+  <h2>
+  <div><img src="price_vs_city.png"></div>
+  <p> This graph shows the average price of an AirBnb vs the city it is in </p>
+  <div><img src="price_vs_instant_bookable.png"></div>
+  <p> This graph shows the relationship bewtween the average price of an AirBnb and whether
+  it is instantly bookable </p>
+  <div><img src="distribution_plot.png"></div>
+  <p> This plot shows the distribution of all the Air Bnb's by price </p>
+  <div><img src="price_vs_property_type.png"></div>
+  <p> This plot shows the the average price for each of the property types listed in the data </p>
+  <div><img src="numerical_correlation_heatmap.png"></div>
+  <p> This plot is a heatmap showing the correllation between the price of the AirBnb and the numerical features </p>
+  </h2>
+</div>
+
+</body>
+</html>

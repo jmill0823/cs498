@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/*CSS for styling the sit */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h2, p {
+    text-align: center;
+    margin: 0 auto;
+    width: 50%
+    
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #7ddce8;
+  color: white;
+}
+
+.left-image {
+  float: left;
+  margin-left: 500px; 
+}
+
+.right-image {
+  float: right;
+  margin-right: 500px;
+}
+
+p{
+  align-items: center;
+  margin: 0 auto;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #333;
+  background-color: #7ddce8;
+  width: 30%;
+  border: 2px solid black;
+  font-weight: bold;
+}
+
+h2{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- nav bar -->
+<div class="topnav">
+  <a class="active" href="CS498-Proj.html">Home</a>
+  <a href="weather.html">Weather</a>
+  <a href="housing.html">Housing</a>
+  <a href="about.html">About us</a>
+</div>
+
+<!-- Project Descriotion -->
+<div style="padding-left:16px">
+  <h2>CS 498 Group Project</h2>
+  <p>The purpose of this website is to implement machine learning algorithms in order to help people plan for vacation.
+    We are doing this in two key ways.  The first is weather prediction. If you click on the weather tab you will be able to 
+    see what our machine learning model predicts the average temperature will be in the future.
+  </p>
+  <p> The second way we are implementing machine learning is by attempting to predict prices for AirBnb's.  Our model
+    attempts to predict the prices for AirBnb's based on user specifications. These specifications include
+    the number of rooms, bathrooms, beds, and the city the airbnb is in. If you wish to view the results of either model
+    you can use the navigation bar at the top of the page, or click on the appropriate image to be taken to the right page
+  </p>
+
+  <!-- Image Links -->
+  <h3>
+    <a href ="weather.html" ><img src = "cloud.png" height = "300" class = "left-image"></a>
+    <a href ="housing.html" ><img src = "house.png" height = "300" class ="right-image"></a>
+  </h3>
+</div>
+
+</body>
+</html>
